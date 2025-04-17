@@ -6,6 +6,8 @@ import prisma from "../../../lib/prisma";
 import { compare } from "bcryptjs";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
+const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3001";
+
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
 
@@ -69,7 +71,7 @@ export const authOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      return 'http://localhost:3001/chat';
+      return `${frontendUrl}/chat`;
     },
   },
   pages: {
