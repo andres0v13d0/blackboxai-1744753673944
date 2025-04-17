@@ -1,0 +1,13 @@
+.env
+node_modules
+dist
+package-lock.json
+yarn-error.log
+npm-debug.log
+.DS_Store
+.vscode
+.next
+*.log
+
+prisma-schema.sql
+.env.local

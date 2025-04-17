@@ -17,6 +17,7 @@ model User {
   accounts       Account[]
   sessions       Session[]
   chatSessions   ChatSession[]
+  partnerSessions ChatSession[] @relation("PartnerChatSession")
   emotionalCheckins EmotionalCheckin[]
   subscription   Subscription?
   createdAt      DateTime  @default(now())

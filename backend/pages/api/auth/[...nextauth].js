@@ -2,14 +2,28 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../lib/prisma";
 import { compare } from "bcryptjs";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-const prisma = new PrismaClient();
+export const authOptions = {
+  adapter: PrismaAdapter(prisma),
 
-export default NextAuth({
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
+    updateAge: 24 * 60 * 60,
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "None",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
   },
   providers: [
     CredentialsProvider({
@@ -54,9 +68,14 @@ export default NextAuth({
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      return 'http://localhost:3001/chat';
+    },
   },
   pages: {
     signIn: "/auth/signin",
   },
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+export default NextAuth(authOptions);
